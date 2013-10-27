@@ -101,7 +101,7 @@ designed to be dynamically rebound.")
   "Signal any errors appearing in JSON."
   (let ((errors (cdr (assoc 'errors (cdr (assoc 'json json))))))
     (cl-loop for error across errors
-             for (name . message) = (coerce error 'list)
+             for (name . message) = (cl-coerce error 'list)
              for signal = (downcase (replace-regexp-in-string "_" "-" name))
              do (signal (intern signal) message)
              finally (return json))))
