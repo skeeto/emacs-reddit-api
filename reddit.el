@@ -46,9 +46,10 @@ designed to be dynamically rebound.")
 
 (cl-defun reddit-session-valid-p (&optional (session reddit-session))
   "Return non-nil if SESSION (default `reddit-session') is valid."
-  (and (reddit-session-p session))) ;; XXX check date
+  (reddit-session-p session))
 
 (cl-defun reddit-auth-headers (&optional (session reddit-session))
+  "Generate the HTTP authentication headers for SESSION."
   (when (reddit-session-valid-p)
     (let ((cookie (reddit-session-cookie session))
           (modhash (reddit-session-modhash session)))
@@ -87,7 +88,7 @@ designed to be dynamically rebound.")
   "Encode PLIST for a GET request."
   (cl-loop for (key value) on plist by #'cddr
            collect (concat (url-hexify-string (reddit-symbol-name key))
-                           "=" (url-hexify-string value))
+                           "=" (url-hexify-string (format "%s" value)))
            into pairs
            finally (return (mapconcat #'identity pairs "&"))))
 
